@@ -22,7 +22,7 @@ The decks are listed in order by how many cards the new deck takes from an older
 
 The migrator uses the concept of "the Supply." These are all of the cards in your collection that were not taken from a previous version of a hero's deck. When a card is removed from a hero's deck, it enters "the Supply."
 
-When a card says "from Hero X", then the migrator expects that you take the listed card from Hero X's old deck and use it in the new hero's deck.
+When a card says "from Hero X", then the migrator expects that you take the listed card from Hero X's old deck and use it in the new hero's deck. For example, imagine Star-Lord is adding Team Training and Ironheart is removing Team training. Ironheart also shows up before Star-Lord in the migration steps. Cards only ever remove to the Supply. So Team Training will be added to the Supply while migrating Ironheart. Later, when migrating Star-Lord, it will say to use Ironheart's Team Training. Since Ironheart was already migrated, this card will be in the Supply.
 
 Any decks that only appear on the newer list assume that all aspect cards that come with that hero (precon and extra) have already been moved to the supply.
 
