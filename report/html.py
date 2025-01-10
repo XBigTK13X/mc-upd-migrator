@@ -1,7 +1,12 @@
 import os
 
 def deck_to_markup(progress, deck_name, moves):
-    deck_markup = f'<h2>{progress} {deck_name}</h2><table>'
+    deck_markup = f'''<h2>
+        {progress} {deck_name}
+        [+{len([xx for xx in moves if "Add" in xx.action])}/-{len([xx for xx in moves if "Remove" in xx.action])}]
+        </h2>
+        <table>
+        '''
     entries = [f'''
             <tr class="aspect-{xx.card.aspect}">
             <td class="col-sm">{xx.action}</td>
