@@ -192,7 +192,7 @@ def read_decks_from_xls(file_path,deck_sheet,card_lookup):
             decks_by_name[deck.name] = deck
             names_by_column_index[deck.column_index] = deck.name
         if row_count > 1:
-            for ii in range(0,len(xls_row)-2):
+            for ii in range(0,len(xls_row)-2,2):
                 if ii % 2 == 0:
                     column_index = ii
                     if xls_row[ii].value == None:

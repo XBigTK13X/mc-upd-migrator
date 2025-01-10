@@ -58,4 +58,11 @@ def generate_report(deck_order,card_moves,migration_chains):
             if deck_name in card_moves and not deck_name in chained:
                 deck_markup += deck_to_markup(deck_name,card_moves[deck_name])
         html_markup = html_markup.replace('(((decks)))',deck_markup)
+        decks_without_changes = False
+        for deck_name in deck_order:
+            if deck_name and not deck_name in card_moves and not deck_name in chained:
+                if not decks_without_changes:
+                    decks_without_changes = True
+                    html_markup += f'<hr/><h1>UNCHANGED DECKS</h1>'
+                html_markup += f'<h2>{deck_name}</h2>'
         write_handle.write(html_markup)
