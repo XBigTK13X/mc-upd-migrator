@@ -1,12 +1,12 @@
 import os
 
 def deck_to_markup(progress, deck_name, moves):
-    removals = len([xx for xx in moves if "Remove" in xx.action])
-    additions = len([xx for xx in moves if "Add" in xx.action])
+    removals =  len([xx for xx in moves if "Remove" in xx.action])
+    additions = len([xx for xx in moves if "Add"    in xx.action])
     progress_info = ''
-    if additions > 0 and removals < 0:
+    if additions > 0 and removals > 0:
         progress_info = f'[-{removals}/+{additions}]'
-    elif additions > 0 and removals >=0:
+    elif additions > 0 and removals <=0:
         progress_info = f'[+{additions}]'
     elif additions <= 0 and removals < 0:
         progress_info = f'[-{removals}]'
