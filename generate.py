@@ -20,8 +20,9 @@ def calculate_moves(ledger,card_lookup):
                         moves[deck_name].append(model.LedgerEntry(deck_name,'Supply',deck_name,card_lookup[card_id]))
                 else:
                     for ii in range(0, to_count):
-                        if len(entries['from']) > 0:
-                            source_deck = entries['from'].pop()
+                        if len(entries['from']) > entries['from_index']:
+                            source_deck = entries['from'][entries['from_index']]
+                            entries['from_index'] += 1
                             moves[deck_name].append(model.LedgerEntry(deck_name,source_deck,deck_name,card_lookup[card_id]))
                             ledger.deck_connections[deck_name].connect(source_deck)
                         else:
@@ -67,8 +68,10 @@ def build_ledger(old_list,new_list,deck_sheet):
         if 'new' in decks and 'old' in decks:
             old_deck = decks['old']
             old_card_ids = decks['old'].card_ids()
+            old_cards = [card_lookup[xx] for xx in old_card_ids]
             new_deck = decks['new']
             new_card_ids = decks['new'].card_ids()
+            new_cards = [card_lookup[xx] for xx in new_card_ids]
             for old_card_id in old_card_ids:
                 if not old_card_id in new_card_ids:
                     for ii in range(0,old_deck.card_amount(old_card_id)):
@@ -91,7 +94,6 @@ def build_ledger(old_list,new_list,deck_sheet):
             for new_card_id,amount in decks['new'].cards.items():
                 for ii in range(0,amount):
                     ledger.add_card_to(deck_name, new_card_id, is_new=True)
-        ledger.ignore_corrections(card_lookup)
 
     moves = calculate_moves(ledger,card_lookup)
     chains = calculate_migration_chain(ledger)

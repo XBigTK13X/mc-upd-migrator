@@ -33,7 +33,7 @@ class Card:
         self.kind = kind
         self.color = color.rgb
         self.aspect = ASPECT_COLORS[self.color]
-        self.id = f'[{self.aspect} - {self.kind}] {self.name}'
+        self.id = self.name
         self.kind_order = KIND_ORDER[self.kind]
         self.aspect_order = ASPECT_ORDER[self.aspect]
 
@@ -130,32 +130,30 @@ class Ledger:
 
     def remove_card_from(self,deck_name,card_id):
         if not card_id in self.cards:
-            self.cards[card_id] = {'to':[],'from':[]}
+            self.cards[card_id] = {'to':[],'from':[],'from_index':0}
         self.cards[card_id]['from'].append(deck_name)
         if not deck_name in self.deck_hits:
             self.deck_hits[deck_name] = 0
-        self.deck_hits[deck_name] += 1
+        # When a card's type is correct in the spreadsheet, this can happen
+        if deck_name in self.cards[card_id]['to'] and deck_name in self.cards[card_id]['from']:
+            self.cards[card_id]['to'].remove(deck_name)
+            self.cards[card_id]['from'].remove(deck_name)
+        else:
+            self.deck_hits[deck_name] += 1
 
     def add_card_to(self,deck_name,card_id,is_new=False):
         if is_new:
             if not deck_name in self.new_decks:
                 self.new_decks.append(deck_name)
         if not card_id in self.cards:
-            self.cards[card_id] = {'to':[],'from':[]}
+            self.cards[card_id] = {'to':[],'from':[],'from_index':0}
         self.cards[card_id]['to'].append(deck_name)
         if not deck_name in self.deck_hits:
             self.deck_hits[deck_name] = 0
-        self.deck_hits[deck_name] += 1
-
-    def ignore_corrections(self,card_lookup):
-        matches = {}
-        for card_id,entries in self.cards.items():
-            card = card_lookup[card_id]
-            if not card.name in matches:
-                matches[card.name] = []
-            matches[card.name].append(card)
-        for card_name,cards in matches.items():
-            if len(cards) > 1:
-                for card in cards:
-                    del self.cards[card.id]
+        # When a card's type is correct in the spreadsheet, this can happen
+        if deck_name in self.cards[card_id]['to'] and deck_name in self.cards[card_id]['from']:
+            self.cards[card_id]['to'].remove(deck_name)
+            self.cards[card_id]['from'].remove(deck_name)
+        else:
+            self.deck_hits[deck_name] += 1
 

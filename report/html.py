@@ -1,9 +1,17 @@
 import os
 
 def deck_to_markup(progress, deck_name, moves):
+    removals = len([xx for xx in moves if "Remove" in xx.action])
+    additions = len([xx for xx in moves if "Add" in xx.action])
+    progress_info = ''
+    if additions > 0 and removals < 0:
+        progress_info = f'[-{removals}/+{additions}]'
+    elif additions > 0 and removals >=0:
+        progress_info = f'[+{additions}]'
+    elif additions <= 0 and removals < 0:
+        progress_info = f'[-{removals}]'
     deck_markup = f'''<h2>
-        {progress} {deck_name}
-        [+{len([xx for xx in moves if "Add" in xx.action])}/-{len([xx for xx in moves if "Remove" in xx.action])}]
+        {progress} {deck_name} {progress_info}
         </h2>
         <table>
         '''
@@ -40,6 +48,7 @@ def generate_report(deck_order,card_moves,migration_chains):
         table {border-spacing: 0; border-collapse: collapse;}
         tr {border: solid black 2px;}
         td {padding:0.2em;font-size:1.3em;}
+        .link {width:20vw;}
         .col-sm {width:8vw;}
         .col-md {width:30vw;}
         .aspect-basic {background:#99999955;}
@@ -54,10 +63,18 @@ def generate_report(deck_order,card_moves,migration_chains):
     </head>
     <body>
         <div>
+            <div class="link">
             <a target="_blank" href="https://boardgamegeek.com/geeklist/278797/marvel-champions-universal-prebuilt-decks">BGG GeekList</a>
+            </div>
+            <div class="link">
             <a target="_blank" href="https://docs.google.com/spreadsheets/d/1uDnn-7Urtprf3awFV0cSUHseIqJQYCVF7ckineFVBP4/edit?usp=sharing">Latest Deck Lists</a>
+            </div>
+            <div class="link">
             <a target="_blank" href="https://drive.google.com/drive/folders/1M2qAy6ddI7Doj7G1UcX4Me71tnPtwM9J?usp=sharing">Deck Lists Archive</a>
+            </div>
+            <div class="link">
             <a target="_blank" href="https://github.com/XBigTK13X/mc-upd-migrator">Deck List Migrator</a>
+            </div>
         </div>
         (((decks)))
     </body>
