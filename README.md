@@ -1,6 +1,6 @@
 # Marvel Champions - Universal Prebuilt Deck Migrator
 
-This tool helps migrate from older deck lists to newer deck lists in the wonderful [Universal Prebuilt Deck Lists](https://boardgamegeek.com/geeklist/278797/marvel-champions-universal-prebuilt-decks) project by BGG user acharlie1377. It serves as an alternative to taken apart and rebuilding the entire list when new sets are released.
+This tool helps migrate from older deck lists to newer deck lists in the wonderful [Universal Prebuilt Deck Lists](https://boardgamegeek.com/geeklist/278797/marvel-champions-universal-prebuilt-decks) project by BGG user acharlie1377. It serves as an alternative to taking apart and rebuilding the entire list when new sets are released.
 
 ## How to Make a Migration Report
 
