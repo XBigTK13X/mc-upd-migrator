@@ -26,6 +26,11 @@ def generate_report(deck_order,card_moves,migration_chains):
     <style>
     @media print, screen {
         body {margin: 2em; font-size:1.5em;}
+        a {
+            margin: 1.5em;
+            font-size: 1em;
+        }
+        h1 {text-align:center;}
         h2 {margin-top:1em;margin-bottom:0;}
         table {border-spacing: 0; border-collapse: collapse;}
         tr {border: solid black 2px;}
@@ -43,6 +48,12 @@ def generate_report(deck_order,card_moves,migration_chains):
     <title>Marvel Champions Deck Migration</title
     </head>
     <body>
+        <div>
+            <a target="_blank" href="https://boardgamegeek.com/geeklist/278797/marvel-champions-universal-prebuilt-decks">BGG GeekList</a>
+            <a target="_blank" href="https://docs.google.com/spreadsheets/d/1uDnn-7Urtprf3awFV0cSUHseIqJQYCVF7ckineFVBP4/edit?usp=sharing">Latest Deck Lists</a>
+            <a target="_blank" href="https://drive.google.com/drive/folders/1M2qAy6ddI7Doj7G1UcX4Me71tnPtwM9J?usp=sharing">Deck Lists Archive</a>
+            <a target="_blank" href="https://github.com/XBigTK13X/mc-upd-migrator">Deck List Migrator</a>
+        </div>
         (((decks)))
     </body>
     </html>
