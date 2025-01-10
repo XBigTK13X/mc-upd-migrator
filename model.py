@@ -147,7 +147,15 @@ class Ledger:
             self.deck_hits[deck_name] = 0
         self.deck_hits[deck_name] += 1
 
-    def ignore_corrections(self,deck_name):
-        # TODO When a card correction was made, it can be ignored
-        # For example, NeXt Generation to Apocalypse changed Drax's Booster Boots from Support to Upgrade
-        pass
+    def ignore_corrections(self,card_lookup):
+        matches = {}
+        for card_id,entries in self.cards.items():
+            card = card_lookup[card_id]
+            if not card.name in matches:
+                matches[card.name] = []
+            matches[card.name].append(card)
+        for card_name,cards in matches.items():
+            if len(cards) > 1:
+                for card in cards:
+                    del self.cards[card.id]
+

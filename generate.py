@@ -91,7 +91,7 @@ def build_ledger(old_list,new_list,deck_sheet):
             for new_card_id,amount in decks['new'].cards.items():
                 for ii in range(0,amount):
                     ledger.add_card_to(deck_name, new_card_id, is_new=True)
-        ledger.ignore_corrections(deck_name)
+        ledger.ignore_corrections(card_lookup)
 
     moves = calculate_moves(ledger,card_lookup)
     chains = calculate_migration_chain(ledger)
