@@ -48,7 +48,7 @@ def generate_report(deck_order,card_moves,migration_chains):
         table {border-spacing: 0; border-collapse: collapse;}
         tr {border: solid black 2px;}
         td {padding:0.2em;font-size:1.3em;}
-        .link {width:20vw;}
+        .link {width:18vw;display:inline;}
         .col-sm {width:8vw;}
         .col-md {width:30vw;}
         .aspect-basic {background:#99999955;}
