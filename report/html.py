@@ -24,6 +24,7 @@ def generate_report(deck_order,card_moves,migration_chains):
     <html>
     <head>
     <style>
+    @media print, screen {
         body {margin: 2em; font-size:1.5em;}
         h2 {margin-top:1em;margin-bottom:0;}
         table {border-spacing: 0; border-collapse: collapse;}
@@ -37,6 +38,7 @@ def generate_report(deck_order,card_moves,migration_chains):
         .aspect-leadership {background:#6FA8DC55;}
         .aspect-protection {background:#00FF0055;}
         .aspect-pool {background:#FA719E55;}
+    }
     </style>
     <title>Marvel Champions Deck Migration</title
     </head>
