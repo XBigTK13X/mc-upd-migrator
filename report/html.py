@@ -1,7 +1,7 @@
 import os
 
-def deck_to_markup(deck_name, moves):
-    deck_markup = f'<h2>{deck_name}</h2><table>'
+def deck_to_markup(progress, deck_name, moves):
+    deck_markup = f'<h2>{progress} {deck_name}</h2><table>'
     entries = [f'''
             <tr class="aspect-{xx.card.aspect}">
             <td class="col-sm">{xx.action}</td>
@@ -31,7 +31,7 @@ def generate_report(deck_order,card_moves,migration_chains):
             font-size: 1em;
         }
         h1 {text-align:center;}
-        h2 {margin-top:1em;margin-bottom:0;}
+        h2 {margin-top:1em;margin-bottom:.2em;}
         table {border-spacing: 0; border-collapse: collapse;}
         tr {border: solid black 2px;}
         td {padding:0.2em;font-size:1.3em;}
@@ -40,7 +40,7 @@ def generate_report(deck_order,card_moves,migration_chains):
         .aspect-basic {background:#99999955;}
         .aspect-aggression {background:#FF000055;}
         .aspect-justice {background:#FFFF0088;}
-        .aspect-leadership {background:#6FA8DC55;}
+        .aspect-leadership {background:#6F88EC55;}
         .aspect-protection {background:#00FF0055;}
         .aspect-pool {background:#FA719E55;}
     }
@@ -58,22 +58,31 @@ def generate_report(deck_order,card_moves,migration_chains):
     </body>
     </html>
     '''
-        deck_markup = '<h1>UPDATED DECKS</h1>'
         chained = []
+        updated_count = len([xx for xx in migration_chains if xx.deck_name in card_moves])
+        updated_index = 1
+        deck_markup = f'<h1>{updated_count} UPDATED DECKS</h1>'
         for migration_chain in migration_chains:
             if migration_chain.deck_name in card_moves:
-                deck_markup += deck_to_markup(migration_chain.deck_name, card_moves[migration_chain.deck_name])
+                deck_markup += deck_to_markup(f'[{updated_index:03}/{updated_count:03}]', migration_chain.deck_name, card_moves[migration_chain.deck_name])
                 chained.append(migration_chain.deck_name)
-        deck_markup += '<hr/><h1>NEW DECKS</h1>'
+                updated_index += 1
+
+        new_count = len([xx for xx in deck_order if xx in card_moves and not xx in chained])
+        new_index = 1
+        deck_markup += f'<hr/><h1>{new_count} NEW DECKS</h1>'
         for deck_name in deck_order:
             if deck_name in card_moves and not deck_name in chained:
-                deck_markup += deck_to_markup(deck_name,card_moves[deck_name])
-        html_markup = html_markup.replace('(((decks)))',deck_markup)
+                deck_markup += deck_to_markup(f'[{new_index:03}/{new_count:03}]',deck_name,card_moves[deck_name])
+                new_index += 1
+
         decks_without_changes = False
         for deck_name in deck_order:
             if deck_name and not deck_name in card_moves and not deck_name in chained:
                 if not decks_without_changes:
                     decks_without_changes = True
-                    html_markup += f'<hr/><h1>UNCHANGED DECKS</h1>'
-                html_markup += f'<h2>{deck_name}</h2>'
+                    deck_markup += f'<hr/><h1>UNCHANGED DECKS</h1>'
+                deck_markup += f'<h2>{deck_name}</h2>'
+
+        html_markup = html_markup.replace('(((decks)))',deck_markup)
         write_handle.write(html_markup)
