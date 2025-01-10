@@ -7,14 +7,35 @@ ASPECT_COLORS = {
     'FFFA719E': "Pool"
 }
 
+KIND_ORDER = {
+    'Ally': 0,
+    'Support': 1,
+    'Event': 2,
+    'Upgrade': 3,
+    'Resource': 4,
+    'Player Side Scheme': 5
+}
+
+ASPECT_ORDER = {
+    'Basic': 6,
+    'Aggression': 1,
+    'Leadership': 2,
+    'Justice': 3,
+    'Protection': 4,
+    'Pool': 5
+}
+
 class Card:
     def __init__(self, name, kind, color):
         global ASPECT_COLORS
+        global KIND_ORDER
         self.name = name
         self.kind = kind
         self.color = color.rgb
         self.aspect = ASPECT_COLORS[self.color]
         self.id = f'[{self.aspect} - {self.kind}] {self.name}'
+        self.kind_order = KIND_ORDER[self.kind]
+        self.aspect_order = ASPECT_ORDER[self.aspect]
 
     def __str__(self):
         return self.__repr__()
@@ -48,6 +69,18 @@ class CardPool:
     def __repr__(self):
         return f'{self.cards}'
 
+class MigrationChain:
+    def __init__(self, deck_name):
+        self.deck_name = deck_name
+        self.connections = []
+
+    def connect(self, deck_name):
+        if not deck_name in self.connections:
+            self.connections.append(deck_name)
+
+    def connection_count(self):
+        return len(self.connections)
+
 class LedgerEntry:
     def __init__(self, deck_name, source, destination, card):
         self.deck_name = deck_name
@@ -66,23 +99,27 @@ class LedgerEntry:
         if self.destination == 'Supply':
             self.target = 'the Supply'
 
+    @staticmethod
+    def sort_order(a,b):
+        if a.source == a.deck_name and b.source != b.deck_name:
+            return -1
+        if b.source == b.deck_name and a.source != a.deck_name:
+            return 1
+        if a.source == 'Supply' and b.source != 'Supply':
+            return -1
+        if b.source == 'Supply' and a.source != 'Supply':
+            return 1
+        if a.card.aspect_order != b.card.aspect_order:
+            return a.card.aspect_order - b.card.aspect_order
+        if a.card.kind_order != b.card.kind_order:
+            return a.card.kind_order - b.card.kind_order
+        return -1 if a.card.id < b.card.id else 1
+
     def __repr__(self):
         return f'{self.action} {self.card.id} {self.direction} {self.target}'
 
     def __str__(self):
         return self.__repr__()
-
-class MigrationChain:
-    def __init__(self, deck_name):
-        self.deck_name = deck_name
-        self.connections = []
-
-    def connect(self, deck_name):
-        if not deck_name in self.connections:
-            self.connections.append(deck_name)
-
-    def connection_count(self):
-        return len(self.connections)
 
 class Ledger:
     def __init__(self):

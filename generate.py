@@ -4,16 +4,6 @@ import model
 import excel
 
 def calculate_moves(ledger,card_lookup):
-    def move_sort(a,b):
-        if a.source == a.deck_name and b.source != b.deck_name:
-            return -1
-        if b.source == b.deck_name and a.source != a.deck_name:
-            return 1
-        if a.source == 'Supply' and b.source != 'Supply':
-            return -1
-        if b.source == 'Supply' and a.source != 'Supply':
-            return 1
-        return -1 if a.card.id < b.card.id else 1
     moves = {}
     ordered_deck_names = sorted(list(ledger.deck_hits.keys()), key = lambda xx: ledger.deck_hits[xx])
     for deck_name in ordered_deck_names:
@@ -42,7 +32,7 @@ def calculate_moves(ledger,card_lookup):
                 for ii in range(0, from_count):
                     moves[deck_name].append(model.LedgerEntry(deck_name,deck_name,'Supply',card_lookup[card_id]))
         import functools
-        moves[deck_name] = sorted(moves[deck_name],key=functools.cmp_to_key(move_sort))
+        moves[deck_name] = sorted(moves[deck_name],key=functools.cmp_to_key(model.LedgerEntry.sort_order))
     return moves
 
 def calculate_migration_chain(ledger):
