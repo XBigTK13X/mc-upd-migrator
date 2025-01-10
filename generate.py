@@ -1,7 +1,7 @@
-import openpyxl
-from report import html
+import functools
 import model
 import excel
+from report import html
 
 def calculate_moves(ledger,card_lookup):
     moves = {}
@@ -31,7 +31,6 @@ def calculate_moves(ledger,card_lookup):
                 ledger.deck_connections[deck_name].connect('Supply')
                 for ii in range(0, from_count):
                     moves[deck_name].append(model.LedgerEntry(deck_name,deck_name,'Supply',card_lookup[card_id]))
-        import functools
         moves[deck_name] = sorted(moves[deck_name],key=functools.cmp_to_key(model.LedgerEntry.sort_order))
     return moves
 

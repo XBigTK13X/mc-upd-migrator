@@ -5,37 +5,38 @@ def read_decks_from_xls(file_path,deck_sheet,card_lookup):
     print(f"Reading {file_path}")
     names_by_column_index = {}
     decks_by_name = {}
-    workbook = openpyxl.load_workbook(file_path)
+    workbook = openpyxl.load_workbook(file_path,data_only=True)
     workbook.active = workbook[deck_sheet]
-    row_count = 0
-    for xls_row in workbook.active.rows:
-        tick_tock = 0
-        col_count = 0
+    xls_rows = []
+    for row in workbook.active.rows:
+        xls_rows.append(row)
+    for row_index in range(0,len(xls_rows)):
+        xls_row = xls_rows[row_index]
         deck = None
-        if row_count == 0:
-            for xls_cell in xls_row:
-                if tick_tock == 0:
-                    if deck != None:
-                        decks_by_name[deck.name] = deck
-                        names_by_column_index[deck.column_index] = deck.name
-                    deck = model.CardPool(name=xls_cell.value, kind='deck', column_index=col_count)
-                tick_tock = (tick_tock + 1) % 2
-                col_count += 1
-            # Make sure the last deck isn't ignored
-            decks_by_name[deck.name] = deck
-            names_by_column_index[deck.column_index] = deck.name
-        if row_count > 1:
-            for ii in range(0,len(xls_row)-2,2):
-                if ii % 2 == 0:
-                    column_index = ii
-                    if xls_row[ii].value == None:
-                        break
-                    card = model.Card(name=xls_row[ii].value,kind=xls_row[ii+1].value,color=xls_row[ii].fill.bgColor)
+        if row_index == 0:
+            for column_index in range(0,len(xls_row)-2,2):
+                deck_name_cell = xls_row[column_index]
+                if deck_name_cell.value != None:
+                    deck = model.CardPool(name=deck_name_cell.value, kind='deck', column_index=column_index)
+                    decks_by_name[deck.name] = deck
+                    names_by_column_index[deck.column_index] = deck.name
+
+        if row_index > 1:
+            for column_index in range(0,len(xls_row)-2,2):
+                if column_index % 2 == 0:
+                    name_cell = xls_row[column_index]
+                    kind_cell = xls_row[column_index + 1]
+                    if xls_row[column_index].value == None:
+                        continue
+                    card = model.Card(
+                        name=name_cell.value,
+                        kind=kind_cell.value,
+                        color=name_cell.fill.bgColor
+                    )
                     if not card.id in card_lookup:
                         card_lookup[card.id] = card
                     deck_name = names_by_column_index[column_index]
                     deck = decks_by_name[deck_name]
                     deck.put_card(card.id)
                     decks_by_name[deck_name] = deck
-        row_count += 1
     return decks_by_name,card_lookup
