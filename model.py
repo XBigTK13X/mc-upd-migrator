@@ -25,17 +25,49 @@ ASPECT_ORDER = {
     'Pool': 5
 }
 
+allies = [
+    'Brother Voodoo (Jericho Drumm)',
+    'Iceman (Bobby Drake)'
+]
+
+events = [
+    'Shake it Off',
+    'Assess the Situation',
+    'Face the Past'
+]
+
+upgrades = [
+    'Defensive Conditioning'
+]
+
+resources = [
+    'Strength'
+]
+
 class Card:
     def __init__(self, name, kind, color):
-        global ASPECT_COLORS
-        global KIND_ORDER
-        self.name = name
-        self.kind = kind
-        self.color = color.rgb
-        self.aspect = ASPECT_COLORS[self.color]
-        self.id = self.name
-        self.kind_order = KIND_ORDER[self.kind]
-        self.aspect_order = ASPECT_ORDER[self.aspect]
+        try:
+            global ASPECT_COLORS
+            global KIND_ORDER
+            self.name = name
+            self.kind = kind
+            if self.kind == None:
+                if self.name in allies or ('(' in self.name and ')' in self.name):
+                    self.kind = 'Ally'
+                elif self.name in events:
+                    self.kind = 'Event'
+                elif self.name in upgrades:
+                    self.kind = 'Upgrade'
+                elif self.name in resources:
+                    self.kind = 'Resource'
+            self.color = color.rgb
+            self.aspect = ASPECT_COLORS[self.color]
+            self.id = self.name
+            self.kind_order = KIND_ORDER[self.kind]
+            self.aspect_order = ASPECT_ORDER[self.aspect]
+        except Exception as e:
+            print(f'{self.kind} - {self.name}')
+            raise e
 
     def __str__(self):
         return self.__repr__()
